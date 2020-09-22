@@ -15,7 +15,7 @@ tesla_df <-
 
 #adat lementese (csak hogy reprodukalhato legyen)
 write.csv(tesla_df,
-          "C:/Users/Domonkos/Documents/EmpirikusP-nz-gyek/tesla_adj_close.csv")
+          "C:/Users/Nguyen Nam Tuan/Downloads/EmpirikusP-nz-gyek/tesla_adj_close.csv")
 
 #loghozamok kiszamitasa
 tesla_df$log_returns <- diff(log(tesla_df$TSLA.Adjusted))
@@ -50,28 +50,33 @@ tesla_df$kurtosis <-
   install.packages("nortest")
   nortest::ad.test(tesla_df$log_returns)
   
-  #3. Jarque-Bera teszt
+  #3. Jarque-Bera teszt szerint is normalis
   install.packages("tsoutliers")
   tsoutliers::JarqueBera.test(tesla_df$log_returns)
-  
+ 
 #hozamok eloszlásának abrazolasa
-  ggplot(tesla_df, aes(x = log_returns)) + geom_histogram() + labs(title =
-                                                                     "Tesla hozamainak eloszlása", x = "Loghozamok", y = "Gyakoriság")
+ggplot(tesla_df, aes(x = log_returns)) + geom_histogram() + 
+  labs(title ="Tesla hozamainak eloszlása", x = "Loghozamok", y = "Gyakoriság")
+
+#hozamok ábrázolása időben
+ggplot(tesla_df, aes(y = log_returns, x = Date))+
+  geom_line()
+
 #varhato ertek abrazolasa
-ggplot(tesla_df, aes(y=expected_value, x=Date))+
+ggplot(tesla_df, aes(y = expected_value, x = Date))+
   geom_line()
 
 #szoras abrazolasa
-ggplot(tesla_df, aes(y=standard_dev, x=Date))+
+ggplot(tesla_df, aes(y = standard_dev, x = Date))+
   geom_line()
 
-
 #skewness abrazolasa
-ggplot(tesla_df, aes(y=skewness, x=Date))+
+ggplot(tesla_df, aes(y = skewness, x = Date))+
   geom_line()
 
 
 #kurtosis abrazolasa
-ggplot(tesla_df, aes(y=kurtosis, x=Date))+
+ggplot(tesla_df, aes(y = kurtosis, x = Date))+
   geom_line()
+
 
