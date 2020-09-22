@@ -23,10 +23,10 @@ tesla_df$elso_momentum <- apply.fromstart(tesla_df$log_returns, "mean")
 tesla_df$masodik_momentum <- apply.fromstart(tesla_df$log_returns, "StdDev")
 
 #harmadik momentum kiszamolasa
-tesla_df$harmadik_momentum <- apply.fromstart(tesla_df$log_returns, "StdDev")
+tesla_df$harmadik_momentum <- apply.fromstart(tesla_df$log_returns, "skewness")
 
 #harmadik momentum kiszamolasa
-tesla_df$negyedik_momentum <- apply.fromstart(tesla_df$log_returns, "skewness")
+tesla_df$negyedik_momentum <- apply.fromstart(tesla_df$log_returns, "kurtosis")
 
 
 
