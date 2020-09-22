@@ -17,16 +17,19 @@ names(tesla_df[1]) <- "Date"
 install.packages("PerformanceAnalytics")
 library(PerformanceAnalytics)
 #elso momentum kiszamolasa
-tesla_df$elso_momentum <- apply.fromstart(tesla_df$log_returns, "mean")
+tesla_df$expected_value <- apply.fromstart(tesla_df$log_returns, "mean")
 
 #masodik momentum kiszamolasa
-tesla_df$masodik_momentum <- apply.fromstart(tesla_df$log_returns, "StdDev")
+tesla_df$standard_dev <- apply.fromstart(tesla_df$log_returns, "StdDev")
 
 #harmadik momentum kiszamolasa
-tesla_df$harmadik_momentum <- apply.fromstart(tesla_df$log_returns, "skewness")
+tesla_df$skewness <- apply.fromstart(tesla_df$log_returns, "skewness")
 
 #harmadik momentum kiszamolasa
-tesla_df$negyedik_momentum <- apply.fromstart(tesla_df$log_returns, "kurtosis")
+tesla_df$kurtosis <- apply.fromstart(tesla_df$log_returns, "kurtosis")
+
+
+
 
 
 
