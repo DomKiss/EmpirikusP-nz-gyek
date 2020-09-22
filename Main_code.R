@@ -22,7 +22,7 @@ tesla_df$log_returns <- diff(log(tesla_df$TSLA.Adjusted))
 tesla_df <- na.omit(cbind(index(tesla_df), tesla_df %>% as_tibble))
 
 
-names(tesla_df[1]) <- "Date"
+names(tesla_df)[1] <- "Date"
 install.packages("PerformanceAnalytics")
 library(PerformanceAnalytics)
 #elso momentum kiszamolasa
@@ -54,6 +54,24 @@ tesla_df$kurtosis <-
   install.packages("tsoutliers")
   tsoutliers::JarqueBera.test(tesla_df$log_returns)
   
+#hozamok eloszlásának abrazolasa
+  ggplot(tesla_df, aes(x = log_returns)) + geom_histogram() + labs(title =
+                                                                     "Tesla hozamainak eloszlása", x = "Loghozamok", y = "Gyakoriság")
+#varhato ertek abrazolasa
+ggplot(tesla_df, aes(y=expected_value, x=Date))+
+  geom_line()
 
-#hozamok eloszlásának vizsgálata
-ggplot(tesla_df, aes(x=log_returns)) + geom_histogram()+labs(title="Tesla hozamainak eloszlása",x="Loghozamok", y = "Gyakoriság")
+#szoras abrazolasa
+ggplot(tesla_df, aes(y=standard_dev, x=Date))+
+  geom_line()
+
+
+#skewness abrazolasa
+ggplot(tesla_df, aes(y=skewness, x=Date))+
+  geom_line()
+
+
+#kurtosis abrazolasa
+ggplot(tesla_df, aes(y=kurtosis, x=Date))+
+  geom_line()
+
