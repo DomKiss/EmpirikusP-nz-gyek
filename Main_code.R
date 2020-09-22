@@ -20,11 +20,12 @@ write.csv(tesla_df,
 #loghozamok kiszamitasa
 tesla_df$log_returns <- diff(log(tesla_df$TSLA.Adjusted))
 tesla_df <- na.omit(cbind(index(tesla_df), tesla_df %>% as_tibble))
-
+tesla_df$loss<-tesla_df$log_returns*(-1)
 
 names(tesla_df)[1] <- "Date"
 install.packages("PerformanceAnalytics")
 library(PerformanceAnalytics)
+
 #elso momentum kiszamolasa
 tesla_df$expected_value <-
   apply.fromstart(tesla_df$log_returns, "mean")
@@ -37,7 +38,7 @@ tesla_df$standard_dev <-
 tesla_df$skewness <-
   apply.fromstart(tesla_df$log_returns, "skewness")
 
-#harmadik momentum kiszamolasa
+#negyedik momentum kiszamolasa
 tesla_df$kurtosis <-
   apply.fromstart(tesla_df$log_returns, "kurtosis")
 
@@ -79,4 +80,32 @@ ggplot(tesla_df, aes(y = skewness, x = Date))+
 ggplot(tesla_df, aes(y = kurtosis, x = Date))+
   geom_line()
 
+#normál q-q ábra
+ggplot(mapping = aes(sample=tesla_df$log_returns))+
+  geom_qq() + geom_qq_line(color=2)+labs(title="Normal Q-Q Plot")
 
+#hatványkitevő becslése regresszíóval
+N<-nrow(tesla_df)
+n<-0
+xi=seq(from=0.15,to=0.055,by=-0.005)
+
+for(i in 1:nrow(reg_df)){
+  for(j in 1:nrow(tesla_df)){
+    if(tesla_df$loss[j]>xi[i]){
+      n = n+1
+      }
+    }
+  yi[i]=n/N
+  n=0
+  }
+
+yi<-yi
+reg_df<-data.frame(xi=seq(from=0.15,to=0.055,by=-0.005), yi=yi, lnxi=log(xi), lnyi=log(yi))
+atlagx<-mean(reg_df$lnxi)
+atlagy<-mean(reg_df$lnyi)
+reg_df$dlnxi2<-(reg_df$lnxi-atlagx)^2
+reg_df$dlnxiyi<-(reg_df$lnxi-atlagx)*(reg_df$lnyi-atlagy)
+dlnx2sum<-sum(reg_df$dlnxi2)
+dlnxysum<-sum(reg_df$dlnxiyi)
+
+alpha<--dlnxysum/dlnx2sum
