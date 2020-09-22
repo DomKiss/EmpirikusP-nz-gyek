@@ -41,8 +41,6 @@ tesla_df$skewness <-
 tesla_df$kurtosis <-
   apply.fromstart(tesla_df$log_returns, "kurtosis")
 
-#eloszlas abrazolasa
-ggdensity(tesla_df$log_returns, main = "Tesla hozamainak eloszlása")
 
 #normalitas vizsgalata
   #1. shapiro test szerint normalis
@@ -55,3 +53,7 @@ ggdensity(tesla_df$log_returns, main = "Tesla hozamainak eloszlása")
   #3. Jarque-Bera teszt
   install.packages("tsoutliers")
   tsoutliers::JarqueBera.test(tesla_df$log_returns)
+  
+
+#hozamok eloszlásának vizsgálata
+ggplot(tesla_df, aes(x=log_returns)) + geom_histogram()+labs(title="Tesla hozamainak eloszlása",x="Loghozamok", y = "Gyakoriság")
