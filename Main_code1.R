@@ -57,28 +57,28 @@ tesla_df$kurtosis <-
  
 #hozamok eloszlásának abrazolasa
 ggplot(tesla_df, aes(x = log_returns)) + geom_histogram() + 
-  labs(title ="Tesla hozamainak eloszlása", x = "Loghozamok", y = "Gyakoriság")
+  labs(title ="Tesla hozamainak eloszlása", x = "Y", y = "Gyakoriság")
 
 #hozamok ábrázolása időben
 ggplot(tesla_df, aes(y = log_returns, x = Date))+
-  geom_line()
+  geom_line()+labs(title="Tesla hozamai az időben", y="Y", x="T")
 
 #varhato ertek abrazolasa
 ggplot(tesla_df, aes(y = expected_value, x = Date))+
-  geom_line()
+  geom_line()+labs(title="Tesla hozamainak várható értéke az időben", y="Mu", x="T")
 
 #szoras abrazolasa
 ggplot(tesla_df, aes(y = standard_dev, x = Date))+
-  geom_line()
+  geom_line()+labs(title="Tesla hozamainak szórása az időben", y="StD", x="T")
 
 #skewness abrazolasa
 ggplot(tesla_df, aes(y = skewness, x = Date))+
-  geom_line()
+  geom_line()+labs(title="Tesla hozamainak ferdesége az időben", y="S", x="T")
 
 
 #kurtosis abrazolasa
 ggplot(tesla_df, aes(y = kurtosis, x = Date))+
-  geom_line()
+  geom_line()+labs(title="Tesla hozamainak csúcsossága az időben", y="K", x="T")
 
 #normál q-q ábra
 ggplot(mapping = aes(sample=tesla_df$log_returns))+
@@ -127,5 +127,5 @@ p=Hill_df$Sequence/nrow(tesla_df)
 Hill_df<-cbind(Hill_df, lnXi, lnXiN, alphas, p)
 
 ggplot(Hill_df[-1,], aes(y = alphas, x = p))+
-  geom_line()+labs(title="Hill-plot", x="Valószínűség", y="Alfa")
+  geom_line()+labs(title="Hill-plot", x="P", y="Alfa")
 
