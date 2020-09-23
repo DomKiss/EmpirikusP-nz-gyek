@@ -113,9 +113,19 @@ Reg_alpha<--dlnxysum/dlnx2sum
 
 #hatványkitevő becslése Hill módszerrel
 NHill<-50
-Hill_df<-data.frame(Sorrend=index(tesla_df$loss[tesla_df$loss>0]),PozitivVeszt=sort(tesla_df$loss[tesla_df$loss>0], decreasing=TRUE))
+Hill_df<-data.frame(Sequence=index(tesla_df$loss[tesla_df$loss>0]),PosLoss=sort(tesla_df$loss[tesla_df$loss>0], decreasing=TRUE))
 A<-Hill_df[NHill,2]
-Hill_df<-cbind(Hill_df, lnxiA=log(Hill_df$PozitivVeszt/A))
+Hill_df<-cbind(Hill_df, lnxiA=log(Hill_df$PosLoss/A))
 
 Hill_alpha<-NHill/sum(Hill_df$lnxiA[Hill_df$lnxiA>0])
+
+#hatványkitevő ábrázolása Hill plottal
+lnXi<-log(Hill_df$PosLoss)
+lnXiN<-cumsum(lnXi)/Hill_df$Sequence
+alphas<-1/(lnXiN-lnXi)
+p=Hill_df$Sequence/nrow(tesla_df)
+Hill_df<-cbind(Hill_df, lnXi, lnXiN, alphas, p)
+
+ggplot(Hill_df[-1,], aes(y = alphas, x = p))+
+  geom_line()+labs(title="Hill-plot", x="Valószínűség", y="Alfa")
 
