@@ -23,7 +23,7 @@ tesla_df <- na.omit(cbind(index(tesla_df), tesla_df %>% as_tibble))
 tesla_df$loss<-tesla_df$log_returns*(-1)
 
 names(tesla_df)[1] <- "Date"
-install.packages("PerformanceAnalytics")
+#install.packages("PerformanceAnalytics")
 library(PerformanceAnalytics)
 
 #elso momentum kiszamolasa
@@ -48,11 +48,11 @@ tesla_df$kurtosis <-
   shapiro.test(tesla_df$log_returns)
   
   #2. Anderson-Darling szerint is normalis
-  install.packages("nortest")
+  #install.packages("nortest")
   nortest::ad.test(tesla_df$log_returns)
   
   #3. Jarque-Bera teszt szerint is normalis
-  install.packages("tsoutliers")
+  #install.packages("tsoutliers")
   tsoutliers::JarqueBera.test(tesla_df$log_returns)
  
 #hozamok eloszlásának abrazolasa
@@ -87,7 +87,7 @@ ggplot(mapping = aes(sample=tesla_df$log_returns))+
 #hatványkitevő becslése regresszíóval
 N<-nrow(tesla_df)
 n<-0
-xi=seq(from=0.15,to=0.055,by=-0.005)
+xi<-seq(from = 0.15,to=0.055,by=-0.005)
 
 for(i in 1:nrow(reg_df)){
   for(j in 1:nrow(tesla_df)){
@@ -100,7 +100,8 @@ for(i in 1:nrow(reg_df)){
   }
 
 yi<-yi
-reg_df<-data.frame(xi=seq(from=0.15,to=0.055,by=-0.005), yi=yi, lnxi=log(xi), lnyi=log(yi))
+
+reg_df<-data.frame(xi = xi, yi = yi, lnxi = log(xi), lnyi = log(yi))
 atlagx<-mean(reg_df$lnxi)
 atlagy<-mean(reg_df$lnyi)
 reg_df$dlnxi2<-(reg_df$lnxi-atlagx)^2
@@ -108,4 +109,13 @@ reg_df$dlnxiyi<-(reg_df$lnxi-atlagx)*(reg_df$lnyi-atlagy)
 dlnx2sum<-sum(reg_df$dlnxi2)
 dlnxysum<-sum(reg_df$dlnxiyi)
 
-alpha<--dlnxysum/dlnx2sum
+Reg_alpha<--dlnxysum/dlnx2sum
+
+#hatványkitevő becslése Hill módszerrel
+NHill<-50
+Hill_df<-data.frame(Sorrend=index(tesla_df$loss[tesla_df$loss>0]),PozitivVeszt=sort(tesla_df$loss[tesla_df$loss>0], decreasing=TRUE))
+A<-Hill_df[NHill,2]
+Hill_df<-cbind(Hill_df, lnxiA=log(Hill_df$PozitivVeszt/A))
+
+Hill_alpha<-NHill/sum(Hill_df$lnxiA[Hill_df$lnxiA>0])
+
