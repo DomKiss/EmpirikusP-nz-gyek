@@ -15,7 +15,7 @@ tesla_df <-
 
 #adat lementese (csak hogy reprodukalhato legyen)
 write.csv(tesla_df,
-          "C:/Users/Nguyen Nam Tuan/Downloads/EmpirikusP-nz-gyek/tesla_adj_close.csv")
+          "~/EmpirikusP-nz-gyek/tesla_adj_close.csv")
 
 #loghozamok kiszamitasa
 tesla_df$log_returns <- diff(log(tesla_df$TSLA.Adjusted))
