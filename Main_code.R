@@ -15,7 +15,7 @@ tesla_df <-
 
 #adat lementese (csak hogy reprodukalhato legyen)
 write.csv(tesla_df,
-          "C:/Users/Nguyen Nam Tuan/Downloads/EmpirikusP-nz-gyek/tesla_adj_close.csv")
+          "~/EmpirikusP-nz-gyek/tesla_adj_close.csv")
 
 #loghozamok kiszamitasa
 tesla_df$log_returns <- diff(log(tesla_df$TSLA.Adjusted))
@@ -44,14 +44,14 @@ tesla_df$kurtosis <-
 
 
 #normalitas vizsgalata
-  #1. shapiro test szerint normalis
+  #1. shapiro test szerint nem normalis
   shapiro.test(tesla_df$log_returns)
   
-  #2. Anderson-Darling szerint is normalis
+  #2. Anderson-Darling szerint sem normalis
   install.packages("nortest")
   nortest::ad.test(tesla_df$log_returns)
   
-  #3. Jarque-Bera teszt szerint is normalis
+  #3. Jarque-Bera teszt szerint sem normalis
   install.packages("tsoutliers")
   tsoutliers::JarqueBera.test(tesla_df$log_returns)
  
@@ -72,14 +72,17 @@ ggplot(tesla_df, aes(y = standard_dev, x = Date))+
   geom_line()
 
 #skewness abrazolasa
-ggplot(tesla_df, aes(y = skewness, x = Date))+
+skewness_plot<- ggplot(tesla_df, aes(y = skewness, x = Date))+
   geom_line()
+show(skewness_plot)
+ggsave(filename="skewness_plot.png", plot=skewness_plot)
 
 
 #kurtosis abrazolasa
-ggplot(tesla_df, aes(y = kurtosis, x = Date))+
+kurtosis <- ggplot(tesla_df, aes(y = kurtosis, x = Date))+
   geom_line()
-
+show(kurtosis)
+ggsave(filename="kurtosis.png", plot=kurtosis)
 #normál q-q ábra
 ggplot(mapping = aes(sample=tesla_df$log_returns))+
   geom_qq() + geom_qq_line(color=2)+labs(title="Normal Q-Q Plot")
