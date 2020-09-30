@@ -1,7 +1,14 @@
+install.packages('quantmod')
+install.packages('dplyr')
+install.packages('ggplot2')
+install.packages('ggpubr')
+
 library(quantmod)
 library(dplyr)
 library(ggplot2)
 library(ggpubr)
+
+
 #adat letoltes yahoo-rol, es adj close kimentese
 tesla_df <-
   getSymbols(
@@ -18,7 +25,7 @@ write.csv(tesla_df,
           "C:/Users/Nguyen Nam Tuan/Downloads/EmpirikusP-nz-gyek/tesla_adj_close.csv")
 
 #loghozamok kiszamitasa
-tesla_df$log_returns <- diff(log(tesla_df$TSLA.Adjusted))
+tesla_df$log_returns <- diff(log(tesla_df[,1]))
 tesla_df <- na.omit(cbind(index(tesla_df), tesla_df %>% as_tibble))
 tesla_df$loss<-tesla_df$log_returns*(-1)
 
@@ -48,11 +55,11 @@ tesla_df$kurtosis <-
   shapiro.test(tesla_df$log_returns)
   
   #2. Anderson-Darling szerint is normalis
-  #install.packages("nortest")
+  install.packages("nortest")
   nortest::ad.test(tesla_df$log_returns)
   
   #3. Jarque-Bera teszt szerint is normalis
-  #install.packages("tsoutliers")
+  install.packages("tsoutliers")
   tsoutliers::JarqueBera.test(tesla_df$log_returns)
  
 #hozamok eloszlásának abrazolasa
@@ -89,7 +96,7 @@ N<-nrow(tesla_df)
 n<-0
 xi<-seq(from = 0.15,to=0.055,by=-0.005)
 
-for(i in 1:nrow(reg_df)){
+for(i in 1:nrow(xi)){
   for(j in 1:nrow(tesla_df)){
     if(tesla_df$loss[j]>xi[i]){
       n = n+1
@@ -111,6 +118,8 @@ dlnxysum<-sum(reg_df$dlnxiyi)
 
 Reg_alpha<--dlnxysum/dlnx2sum
 
+Reg_alpha
+
 #hatványkitevő becslése Hill módszerrel
 NHill<-50
 Hill_df<-data.frame(Sequence=index(tesla_df$loss[tesla_df$loss>0]),PosLoss=sort(tesla_df$loss[tesla_df$loss>0], decreasing=TRUE))
@@ -118,6 +127,8 @@ A<-Hill_df[NHill,2]
 Hill_df<-cbind(Hill_df, lnxiA=log(Hill_df$PosLoss/A))
 
 Hill_alpha<-NHill/sum(Hill_df$lnxiA[Hill_df$lnxiA>0])
+
+Hill_alpha
 
 #hatványkitevő ábrázolása Hill plottal
 lnXi<-log(Hill_df$PosLoss)
