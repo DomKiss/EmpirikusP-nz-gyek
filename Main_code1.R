@@ -96,7 +96,9 @@ N<-nrow(tesla_df)
 n<-0
 xi<-seq(from = 0.15,to=0.055,by=-0.005)
 
-for(i in 1:nrow(xi)){
+yi<-c()
+
+for(i in 1:length(xi)){
   for(j in 1:nrow(tesla_df)){
     if(tesla_df$loss[j]>xi[i]){
       n = n+1
